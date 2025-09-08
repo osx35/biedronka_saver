@@ -1,0 +1,23 @@
+spring:
+
+  application:
+    name: biedronka_saver
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/biedronka
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+fronted:
+  url: http://localhost:3000
+
+server:
+  port: 8080
