@@ -5,6 +5,7 @@ import com.example.biedronka_saver.model.dto.request.SignInRequest;
 import com.example.biedronka_saver.model.dto.response.RegisterResponse;
 import com.example.biedronka_saver.model.dto.response.SignInResponse;
 import com.example.biedronka_saver.model.entity.User;
+import com.example.biedronka_saver.security.JwtUtil;
 import com.example.biedronka_saver.service.interfaces.IAuthService;
 import com.example.biedronka_saver.service.interfaces.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class AuthService implements IAuthService {
     private final IUserService userService;
     private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     @Override
     public SignInResponse signIn(SignInRequest request) {
@@ -27,7 +29,7 @@ public class AuthService implements IAuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         return SignInResponse.builder()
-                .token("token")
+                .token(jwtUtil.generateToken(userDetails.getUsername()))
                 .id(((User) userDetails).getId())
                 .build();
     }
