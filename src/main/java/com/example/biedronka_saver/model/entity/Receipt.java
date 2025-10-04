@@ -1,5 +1,6 @@
 package com.example.biedronka_saver.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,9 +37,11 @@ public class Receipt {
     private Long id;
 
     @ManyToOne
+    @JsonIgnoreProperties("receipts")
     private User owner;
 
     @ManyToMany
+    @JsonIgnoreProperties("receipts")
     @JoinTable(
             name = "receipt_assigned_users",
             joinColumns = @JoinColumn(name = "receipt_id"),
