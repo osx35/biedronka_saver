@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,17 +24,20 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         request ->
                                 request
                                         .requestMatchers(
-                                                "/api/v1/auth/user/signin",
-                                                "/api/v1/auth/user/register",
-                                                "/api/v1/auth/user/me",
-                                                "/api/v1/receipts/owner,",
-                                                "/api/v1/receipts/user")
+                                                "/api/v1/auth/signin",
+                                                "/api/v1/auth/register"
+                                        )
                                         .permitAll()
-                                        .anyRequest().authenticated()
+                                        .requestMatchers(
+                                                "/api/v1/auth/me",
+                                                "/api/v1/receipts/owner",
+                                                "/api/v1/receipts/user"
+                                        ).authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

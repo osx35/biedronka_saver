@@ -9,7 +9,6 @@ import com.example.biedronka_saver.model.entity.User;
 import com.example.biedronka_saver.service.interfaces.IAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,17 +17,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Log4j2
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/auth/user")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
     private final IAuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserSummaryResponse> registerUser(@Valid @RequestBody RegisterRequest request){
+    public ResponseEntity<JSendResponse<UserSummaryResponse>> registerUser(@Valid @RequestBody RegisterRequest request){
         UserSummaryResponse response = authService.register(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(JSendResponse.success("User registered successfully", response));
     }
 
     @PostMapping("/signin")
@@ -38,9 +36,9 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logoutUser(@AuthenticationPrincipal User user){
+    public ResponseEntity<JSendResponse<Void>> logoutUser(@AuthenticationPrincipal User user){
         authService.logout(user);
-        return ResponseEntity.ok("Logout successful.");
+        return ResponseEntity.ok(JSendResponse.success("User logged out", null));
     }
 
     @GetMapping("/me")

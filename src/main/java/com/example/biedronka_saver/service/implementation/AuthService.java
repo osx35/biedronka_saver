@@ -25,12 +25,14 @@ public class AuthService implements IAuthService {
 
     @Override
     public SignInResponse signIn(SignInRequest request) {
-        UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        User user = (User) userService.loadUserByUsername(request.getUsername());
+        String jwt = jwtUtil.generateToken(user.getUsername());
+        log.info("User {} successfully signed in", user.getUsername());
         return SignInResponse.builder()
-                .token(jwtUtil.generateToken(userDetails.getUsername()))
-                .userId(((User) userDetails).getId())
+                .token(jwt)
+                .userId(user.getId())
                 .build();
     }
 

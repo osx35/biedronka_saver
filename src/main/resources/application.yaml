@@ -21,3 +21,10 @@ fronted:
 
 server:
   port: 8080
+
+token:
+  signing:
+    key: "your-256-bit-secret-your-256-bit-secret"
+  expiration:
+    time:
+      seconds: 86400

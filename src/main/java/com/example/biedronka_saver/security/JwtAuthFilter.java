@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -26,10 +26,12 @@ import java.util.List;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final ObjectMapper objectMapper;
+
 
     private static final List<String> PUBLIC_ENDPOINTS = List.of(
-            "/api/v1/auth/user/signin",
-            "/api/v1/auth/user/register"
+            "/api/v1/auth/signin",
+            "/api/v1/auth/register"
     );
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -50,7 +52,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 token = header.substring(7);
                 username = jwtUtil.getUsernameFromToken(token);
             } else {
-                handleAccessDenied(response, "No auth token provided");
+                handleErrorAndAccessDenied(response, HttpStatus.UNAUTHORIZED, "No auth token provided.");
+                return;
             }
 
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
@@ -64,27 +67,28 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    handleErrorAndAccessDenied(response, HttpStatus.UNAUTHORIZED, "Invalid token.");
+                    return;
                 }
             } else {
-                handleAccessDenied(response, "Lack of permissions for user: " + username);
+                handleErrorAndAccessDenied(response, HttpStatus.FORBIDDEN,"Lack of permissions for user: " + username + ".");
+                return;
             }
             filterChain.doFilter(request,response);
         } catch (Exception e) {
             log.error("Error in JWTAuthFilter: {}", e.getMessage(), e);
             SecurityContextHolder.clearContext();
-            handleError(response, e);
+            handleErrorAndAccessDenied(response, HttpStatus.UNAUTHORIZED, "Authentication failed.");
         }
     }
 
-    private void handleAccessDenied(HttpServletResponse response, String message) throws IOException {
+    private void handleErrorAndAccessDenied(HttpServletResponse response, HttpStatus status, String message) throws IOException {
         response.setContentType("application/json");
-        response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.getWriter().write(new ObjectMapper().writeValueAsString(new AccessDeniedException(message)));
-    }
-
-    private void handleError(HttpServletResponse response, Exception e) throws IOException {
-        response.setContentType("application/json");
-        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        response.getWriter().write(new ObjectMapper().writeValueAsString(e));
+        response.setStatus(status.value());
+        response.getWriter().write(
+                objectMapper.writeValueAsString(
+                        Map.of("status","fail","message",message))
+        );
     }
 }

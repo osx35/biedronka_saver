@@ -3,6 +3,7 @@ package com.example.biedronka_saver.model.entity;
 import com.example.biedronka_saver.model.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -42,7 +43,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "owner")
@@ -50,6 +51,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return List.of(role.asAuthority());
     }
 }
