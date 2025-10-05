@@ -11,8 +11,8 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoResponse {
-    private Long id;
+public class UserSummaryResponse {
+    private Long userId;
     private String username;
     private String role;
 }

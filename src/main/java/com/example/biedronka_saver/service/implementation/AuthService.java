@@ -2,7 +2,7 @@ package com.example.biedronka_saver.service.implementation;
 
 import com.example.biedronka_saver.model.dto.request.RegisterRequest;
 import com.example.biedronka_saver.model.dto.request.SignInRequest;
-import com.example.biedronka_saver.model.dto.response.RegisterResponse;
+import com.example.biedronka_saver.model.dto.response.UserSummaryResponse;
 import com.example.biedronka_saver.model.dto.response.SignInResponse;
 import com.example.biedronka_saver.model.entity.User;
 import com.example.biedronka_saver.security.JwtUtil;
@@ -30,16 +30,22 @@ public class AuthService implements IAuthService {
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         return SignInResponse.builder()
                 .token(jwtUtil.generateToken(userDetails.getUsername()))
-                .id(((User) userDetails).getId())
+                .userId(((User) userDetails).getId())
                 .build();
     }
 
     @Override
-    public RegisterResponse register(RegisterRequest request) {
+    public UserSummaryResponse register(RegisterRequest request) {
         User user = userService.createUser(request);
-        return RegisterResponse.builder()
-                .id(user.getId())
+        return me(user);
+    }
+
+    @Override
+    public UserSummaryResponse me(User user) {
+        return UserSummaryResponse.builder()
+                .userId(user.getId())
                 .username(user.getUsername())
+                .role(user.getRole().toString())
                 .build();
     }
 

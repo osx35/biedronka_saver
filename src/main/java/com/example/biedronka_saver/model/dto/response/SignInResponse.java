@@ -12,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignInResponse {
-    private Long id;
+    private Long userId;
     private String token;
 }

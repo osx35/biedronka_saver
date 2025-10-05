@@ -3,9 +3,8 @@ package com.example.biedronka_saver.controller;
 import com.example.biedronka_saver.model.dto.JSendResponse;
 import com.example.biedronka_saver.model.dto.request.RegisterRequest;
 import com.example.biedronka_saver.model.dto.request.SignInRequest;
-import com.example.biedronka_saver.model.dto.response.RegisterResponse;
 import com.example.biedronka_saver.model.dto.response.SignInResponse;
-import com.example.biedronka_saver.model.dto.response.UserInfoResponse;
+import com.example.biedronka_saver.model.dto.response.UserSummaryResponse;
 import com.example.biedronka_saver.model.entity.User;
 import com.example.biedronka_saver.service.interfaces.IAuthService;
 import jakarta.validation.Valid;
@@ -27,8 +26,8 @@ public class AuthController {
     private final IAuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest request){
-        RegisterResponse response = authService.register(request);
+    public ResponseEntity<UserSummaryResponse> registerUser(@Valid @RequestBody RegisterRequest request){
+        UserSummaryResponse response = authService.register(request);
         return ResponseEntity.ok(response);
     }
 
@@ -45,13 +44,9 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<JSendResponse<UserInfoResponse>> getCurrentUser(@AuthenticationPrincipal User user){
-        UserInfoResponse userInfoResponse = UserInfoResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .role(user.getRole().toString())
-                .build();
-        return ResponseEntity.ok(JSendResponse.success("User details retrieved successfully", userInfoResponse));
+    public ResponseEntity<JSendResponse<UserSummaryResponse>> getCurrentUser(@AuthenticationPrincipal User user){
+        UserSummaryResponse response = authService.me(user);
+        return ResponseEntity.ok(JSendResponse.success("User details retrieved successfully", response));
     }
 
 }
