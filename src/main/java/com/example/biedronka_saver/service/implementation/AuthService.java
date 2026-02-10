@@ -8,11 +8,13 @@ import com.example.biedronka_saver.model.entity.User;
 import com.example.biedronka_saver.security.JwtUtil;
 import com.example.biedronka_saver.service.interfaces.IAuthService;
 import com.example.biedronka_saver.service.interfaces.IUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class AuthService implements IAuthService {
     private final JwtUtil jwtUtil;
 
     @Override
-    public SignInResponse signIn(SignInRequest request) {
+    public SignInResponse signIn(@Valid @RequestBody SignInRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         User user = (User) userService.loadUserByUsername(request.getUsername());

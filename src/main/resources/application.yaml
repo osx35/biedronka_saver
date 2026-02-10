@@ -16,6 +16,10 @@ spring:
       hibernate:
         format_sql: true
 
+  web:
+    locale: en
+    locale-resolver: accept_header
+
 fronted:
   url: http://localhost:3000
 

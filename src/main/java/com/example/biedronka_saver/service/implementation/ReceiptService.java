@@ -1,5 +1,7 @@
 package com.example.biedronka_saver.service.implementation;
 
+import com.example.biedronka_saver.mapper.ReceiptCreateRequestToReceiptMapper;
+import com.example.biedronka_saver.model.dto.request.ReceiptCreateRequest;
 import com.example.biedronka_saver.model.entity.Receipt;
 import com.example.biedronka_saver.repository.ReceiptRepository;
 import com.example.biedronka_saver.service.interfaces.IReceiptService;
@@ -14,10 +16,13 @@ import java.util.List;
 @Service
 public class ReceiptService implements IReceiptService {
     private final ReceiptRepository receiptRepository;
+    private final ReceiptCreateRequestToReceiptMapper receiptCreateRequestToReceiptMapper;
 
     @Override
-    public Receipt createReceipt(Receipt receipt) {
-        return null;
+    public Receipt createReceipt(ReceiptCreateRequest request) {
+        Receipt receipt = receiptCreateRequestToReceiptMapper.toEntity(request);
+        receiptRepository.save(receipt);
+        return receipt;
     }
 
     @Override

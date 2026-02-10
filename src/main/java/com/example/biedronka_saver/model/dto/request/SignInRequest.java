@@ -1,6 +1,6 @@
 package com.example.biedronka_saver.model.dto.request;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +9,9 @@ import lombok.Setter;
 @Setter
 @Builder
 public class SignInRequest {
-    @NotNull(message = "Enter the username.")
+    @NotBlank(message = "Username is required")
     private String username;
 
-    @NotNull(message = "Enter the password.")
+    @NotBlank(message = "Password is required")
     private String password;
 }

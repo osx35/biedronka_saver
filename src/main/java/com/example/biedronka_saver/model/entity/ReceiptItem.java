@@ -40,6 +40,9 @@ public class ReceiptItem {
     @Column(name = "price_per_unit", precision = 10, scale = 2)
     private BigDecimal pricePerUnit;
 
+    @Column(name = "quantity", precision = 10, scale = 4)
+    private BigDecimal quantity;
+
     @ManyToOne
     @JoinColumn(name = "discount_id")
     private Discount discount;

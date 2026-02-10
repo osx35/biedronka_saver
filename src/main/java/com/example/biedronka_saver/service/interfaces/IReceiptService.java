@@ -1,11 +1,12 @@
 package com.example.biedronka_saver.service.interfaces;
 
+import com.example.biedronka_saver.model.dto.request.ReceiptCreateRequest;
 import com.example.biedronka_saver.model.entity.Receipt;
 
 import java.util.List;
 
 public interface IReceiptService {
-    Receipt createReceipt(Receipt receipt);
+    Receipt createReceipt(ReceiptCreateRequest receiptCreateRequest);
 
     Receipt getReceiptById(Long receiptId);
     List<Receipt> getAllReceipts();
