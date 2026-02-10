@@ -52,6 +52,12 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(()-> new UsernameNotFoundException("User with given username does not exist."));
