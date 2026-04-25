@@ -39,7 +39,8 @@ public class SecurityConfig {
                                                 "/api/v1/auth/logout",
                                                 "/api/v1/receipts/owner",
                                                 "/api/v1/receipts/user",
-                                                "/api/v1/receipts"
+                                                "/api/v1/receipts",
+                                                "api/v1/groups"
                                         ).authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
