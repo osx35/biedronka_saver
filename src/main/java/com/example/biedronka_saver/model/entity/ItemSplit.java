@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -22,29 +21,18 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "receipt_items")
-public class ReceiptItem {
+@Table(name = "item_splits")
+public class ItemSplit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "receipt_id", nullable = false)
-    private Receipt receipt;
+    private ReceiptItem receiptItem;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    private GroupMember member;
 
-    @Column(name = "regular_price_per_unit", precision = 10, scale = 2)
-    private BigDecimal regularPricePerUnit;
-
-    @Column(precision = 10, scale = 4)
-    private BigDecimal quantity;
-
-    @Column(name = "discount_amount", precision = 10, scale = 2)
-    private BigDecimal discountAmount;
-
-    @Column(name = "final_total_price", precision = 10, scale = 2)
-    private BigDecimal finalTotalPrice;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal owedPercentage;
 }

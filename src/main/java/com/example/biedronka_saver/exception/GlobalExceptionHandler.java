@@ -7,6 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.HandlerMethod;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,4 +37,14 @@ public class GlobalExceptionHandler {
                 .body(JSendResponse.fail("Authentication failed", errors));
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<JSendResponse<String>> handleGenericException(Exception ex, HandlerMethod handlerMethod) {
+        log.error("Unexpected error triggered by {}", getTriggerName(handlerMethod), ex);
+        return ResponseEntity.status(500)
+                .body(JSendResponse.error("Unexpected error occurred", ex.getMessage()));
+    }
+
+    private String getTriggerName(HandlerMethod handlerMethod) {
+        return handlerMethod.getMethod().getName();
+    }
 }

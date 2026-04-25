@@ -1,7 +1,7 @@
 package com.example.biedronka_saver.mapper;
 
-import com.example.biedronka_saver.model.dto.response.ReceiptSummaryResponse;
 import com.example.biedronka_saver.model.entity.Receipt;
+import com.example.biedronka_saver.model.dto.response.ReceiptSummaryResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
         uses = {MapperHelper.class}
 )
 public interface ReceiptToReceiptSummaryResponseMapper {
-    @Mapping(target = "owner", source = "owner.username")
-    @Mapping(target = "assignedUsers", source = "assignedUsers", qualifiedByName = "mapUsersToUsernames" )
+    @Mapping(target = "owner", source = "payer.displayName")
     ReceiptSummaryResponse toEntity(Receipt receipt);
 }

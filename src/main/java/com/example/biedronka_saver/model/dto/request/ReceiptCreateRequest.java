@@ -5,24 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @Builder
 public class ReceiptCreateRequest {
-    private String owner;
+    private Long groupId;
 
-    private List<String> assignedUsers = new ArrayList<>();
+    private String payer;
 
     private String date;
 
     private String storeName;
 
-    private List<ReceiptItemRequest> receiptItems = new ArrayList<>();
-
     private BigDecimal totalAmount;
-
-    private BigDecimal discountSummary;
 }

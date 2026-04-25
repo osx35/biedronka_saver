@@ -31,7 +31,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private static final List<String> PUBLIC_ENDPOINTS = List.of(
             "/api/v1/auth/signin",
-            "/api/v1/auth/register"
+            "/api/v1/auth/register",
+            "/api/v1/groups"
     );
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
