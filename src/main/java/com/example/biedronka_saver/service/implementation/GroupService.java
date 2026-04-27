@@ -1,10 +1,10 @@
 package com.example.biedronka_saver.service.implementation;
 
-import com.example.biedronka_saver.model.entity.Group;
 import com.example.biedronka_saver.mapper.GroupCreateRequestToGroupMapper;
 import com.example.biedronka_saver.mapper.GroupToGroupSummaryResponseMapper;
 import com.example.biedronka_saver.model.dto.request.GroupCreateRequest;
 import com.example.biedronka_saver.model.dto.response.GroupSummaryResponse;
+import com.example.biedronka_saver.model.entity.Group;
 import com.example.biedronka_saver.repository.GroupRepository;
 import com.example.biedronka_saver.service.interfaces.IGroupMemberService;
 import com.example.biedronka_saver.service.interfaces.IGroupService;
@@ -33,4 +33,11 @@ public class GroupService implements IGroupService {
 
         return groupToGroupSummaryResponseMapper.toGroupSummaryResponse(group);
     }
+
+    @Override
+    public Group getGroupByJoinCode(String joinCode) {
+        return groupRepository.findByJoinCode(joinCode)
+                .orElseThrow(() -> new RuntimeException("Group not found"));
+    }
+
 }
