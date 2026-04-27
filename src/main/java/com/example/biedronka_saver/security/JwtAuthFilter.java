@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -28,34 +27,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserService userService;
     private final ObjectMapper objectMapper;
 
-
-    private static final List<String> PUBLIC_ENDPOINTS = List.of(
-            "/api/v1/auth/signin",
-            "/api/v1/auth/register",
-            "/api/v1/groups"
-    );
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String path = request.getServletPath();
         log.info("Processing request for path : {}", path);
 
-        if(PUBLIC_ENDPOINTS.contains(path)){
-            filterChain.doFilter(request,response);
-            return;
-        }
-
         try{
             String header = request.getHeader("Authorization");
-            String token = null;
-            String username = null;
 
-            if(header != null && header.startsWith("Bearer ")){
-                token = header.substring(7);
-                username = jwtUtil.getUsernameFromToken(token);
-            } else {
-                handleErrorAndAccessDenied(response, HttpStatus.UNAUTHORIZED, "No auth token provided.");
+            if(header == null || !header.startsWith("Bearer ")){
+                filterChain.doFilter(request, response);
                 return;
             }
+
+            String token = header.substring(7);
+            String username = jwtUtil.getUsernameFromToken(token);
 
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 if(jwtUtil.validateToken(token)){

@@ -31,7 +31,8 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 "/api/v1/auth/signin",
                                                 "/api/v1/auth/register",
-                                                "/api/v1/groups"
+                                                "/api/v1/groups",
+                                                "/api/v1/groups/{joinCode}"
                                         )
                                         .permitAll()
                                         .requestMatchers(
@@ -39,8 +40,7 @@ public class SecurityConfig {
                                                 "/api/v1/auth/logout",
                                                 "/api/v1/receipts/owner",
                                                 "/api/v1/receipts/user",
-                                                "/api/v1/receipts",
-                                                "api/v1/groups"
+                                                "/api/v1/receipts"
                                         ).authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
