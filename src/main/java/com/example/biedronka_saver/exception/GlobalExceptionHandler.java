@@ -2,12 +2,14 @@ package com.example.biedronka_saver.exception;
 
 import com.example.biedronka_saver.model.dto.JSendResponse;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +37,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(401)
                 .body(JSendResponse.fail("Authentication failed", errors));
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<JSendResponse<Map<String,String>>> handleResponseStatusException(ResponseStatusException ex) {
+        log.error(ex.getMessage());
+        Map<String,String> errors = new HashMap<>();
+        errors.put("message", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(JSendResponse.fail("Fetching entity failed", errors));
     }
 
     @ExceptionHandler(Exception.class)
