@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Builder
 public class ReceiptCreateRequest {
-    private Long groupId;
+    private UUID groupId;
 
     private String payer;
 

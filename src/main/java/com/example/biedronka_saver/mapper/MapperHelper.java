@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,13 +35,13 @@ public class MapperHelper {
 
 
     @Named("mapGroupIdToGroup")
-    public Group mapGroupIdToGroup(Long groupId) {
+    public Group mapGroupIdToGroup(UUID groupId) {
         return groupId == null ? null : groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("Group not found: " + groupId));
     }
 
     @Named("getAllGroupMembersNames")
-    public List<String> getAllGroupMemberNames(Long groupId) {
+    public List<String> getAllGroupMemberNames(UUID groupId) {
         return groupId == null ? null : mapGroupMemberToDisplayName(groupMemberRepository.findAllByGroup_Id(groupId));
     }
 
