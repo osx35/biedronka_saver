@@ -10,8 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class GroupSummaryResponse {
+public class GroupPreview {
     private String name;
-    private String joinCode;
     private List<String> membersNames = new ArrayList<>();
 }
