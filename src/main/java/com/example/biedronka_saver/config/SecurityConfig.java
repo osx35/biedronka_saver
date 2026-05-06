@@ -32,7 +32,8 @@ public class SecurityConfig {
                                                 "/api/v1/auth/signin",
                                                 "/api/v1/auth/register",
                                                 "/api/v1/groups",
-                                                "/api/v1/groups/{joinCode}"
+                                                "/api/v1/groups/{joinCode}",
+                                                "/api/v1/groups/{id}/join/{joinCode}"
                                         )
                                         .permitAll()
                                         .requestMatchers(
