@@ -3,32 +3,24 @@ spring:
   application:
     name: biedronka_saver
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/biedronka
-    username: postgres
-    password: postgres
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
+  config:
+    import: optional:file:.env[.properties]
+
+  datasource:
+    url: ${POSTGRESQL_URL}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
 
   web:
     locale: en
     locale-resolver: accept_header
 
-fronted:
-  url: http://localhost:3000
-
-server:
-  port: 8080
-
 token:
   signing:
-    key: "your-256-bit-secret-your-256-bit-secret"
+    key: ${TOKEN_SIGNING_KEY}
   expiration:
     time:
-      seconds: 86400
+      seconds: ${TOKEN_EXPIRATION}
